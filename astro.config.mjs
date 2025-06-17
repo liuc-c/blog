@@ -2,6 +2,7 @@ import netlify from "@astrojs/netlify";
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
+import mdx from "@astrojs/mdx";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import swup from "@swup/astro";
@@ -103,6 +104,7 @@ export default defineConfig({
 				showCopyToClipboardButton: false,
 			},
 		}),
+		mdx(),
 		svelte(),
 		sitemap(),
 	],

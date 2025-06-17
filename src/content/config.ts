@@ -1,6 +1,7 @@
 import { defineCollection, z } from "astro:content";
 
 const postsCollection = defineCollection({
+	type: 'content', // 支持 .md 和 .mdx 文件
 	schema: z.object({
 		title: z.string(),
 		published: z.date(),
@@ -10,7 +11,7 @@ const postsCollection = defineCollection({
 		image: z.string().optional().default(""),
 		tags: z.array(z.string()).optional().default([]),
 		category: z.string().optional().nullable().default(""),
-		lang: z.string().optional().default(""),
+		lang: z.string().optional().default("zh-cn"), // 设置中文默认值
 
 		/* For internal use */
 		prevTitle: z.string().default(""),
@@ -20,5 +21,5 @@ const postsCollection = defineCollection({
 	}),
 });
 export const collections = {
-	posts: postsCollection,
+	posts: postsCollection, // 支持 .md 和 .mdx 文件
 };
