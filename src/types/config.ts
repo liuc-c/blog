@@ -25,14 +25,8 @@ export type SiteConfig = {
 		depth: 1 | 2 | 3;
 	};
 
-	favicon: Favicon[];
 };
 
-export type Favicon = {
-	src: string;
-	theme?: "light" | "dark";
-	sizes?: string;
-};
 
 export enum LinkPreset {
 	Home = 0,
