@@ -41,7 +41,44 @@ const isProduction = import.meta.env.PROD;
 
 	function trackPageView() {
 		if (typeof window.umami !== 'undefined' && window.umami.track) {
-			window.umami.track();
+			// 获取当前页面的完整信息
+			const currentUrl = window.location.href;
+			const currentTitle = document.title;
+			const currentPath = window.location.pathname + window.location.search;
+
+			console.log('Tracking page view:', {
+				url: currentUrl,
+				title: currentTitle,
+				path: currentPath
+			});
+
+			// 最简单有效的方法：直接发送自定义事件到 Umami
+			// 这样可以确保 URL 和标题都是正确的
+			try {
+				// 发送页面视图事件，包含正确的 URL 和标题
+				window.umami.track('pageview', {
+					url: currentUrl,
+					title: currentTitle,
+					referrer: document.referrer || ''
+				});
+
+				console.log('Successfully tracked pageview with custom data');
+			} catch (error) {
+				console.warn('Custom pageview tracking failed, trying default method:', error);
+				try {
+					// 备用方案：使用默认的 track() 方法
+					// 但首先尝试更新浏览器历史记录来"欺骗" Umami
+					const currentState = history.state;
+					history.replaceState(currentState, currentTitle, currentUrl);
+
+					// 短暂延迟后调用 track，让 Umami 重新读取页面信息
+					setTimeout(() => {
+						window.umami.track();
+					}, 10);
+				} catch (error2) {
+					console.error('All tracking methods failed:', error2);
+				}
+			}
 		} else {
 			console.warn('Umami not available for tracking');
 		}
@@ -55,10 +92,16 @@ const isProduction = import.meta.env.PROD;
 
 		// 监听页面视图事件，在页面转换完成后触发
 		window.swup.hooks.on('page:view', () => {
-			// 延迟一小段时间确保页面完全加载和 URL 更新
+			// 延迟一小段时间确保页面完全加载、URL 和标题都已更新
 			setTimeout(() => {
-				trackPageView();
-			}, 100);
+				// 确保 DOM 和 URL 都已完全更新
+				if (document.readyState === 'complete' || document.readyState === 'interactive') {
+					trackPageView();
+				} else {
+					// 如果页面还在加载，再等一会儿
+					setTimeout(trackPageView, 200);
+				}
+			}, 150);
 		});
 	}
 
