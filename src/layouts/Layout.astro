@@ -74,10 +74,8 @@ const bannerOffset =
 	<head>
 
 		<title>{pageTitle}</title>
-		<!-- Umami analytics -->
-		<script defer src="https://cloud.umami.is/script.js" data-website-id="41669f63-7334-4dba-8e99-2e8ee8e89eed"></script>
 		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-H0MFHGSTY0"></script>
+		<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-H0MFHGSTY0"></script>
 		<script is:inline>
   		window.dataLayer = window.dataLayer || [];
   		function gtag(){dataLayer.push(arguments);}
@@ -85,7 +83,7 @@ const bannerOffset =
 		  gtag('config', 'G-H0MFHGSTY0'); 
 		</script>
 		<!-- Clarity tracking code -->
-		<script type="text/javascript">
+		<script is:inline type="text/javascript">
 			(function(c,l,a,r,i,t,y){
 					c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
 					t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -578,4 +576,67 @@ if (window.swup) {
 } else {
 	document.addEventListener("swup:enable", setup)
 }
+</script>
+
+<script>
+// Umami Analytics with Swup integration
+(function() {
+	let umamiLoaded = false;
+	let umamiScript: HTMLScriptElement | null = null;
+
+	function loadUmami() {
+		if (umamiLoaded || umamiScript) return;
+
+		umamiScript = document.createElement('script');
+		umamiScript.defer = true;
+		umamiScript.src = 'https://cloud.umami.is/script.js';
+		umamiScript.setAttribute('data-website-id', '41669f63-7334-4dba-8e99-2e8ee8e89eed');
+		// 禁用自动页面跟踪，我们将手动控制
+		umamiScript.setAttribute('data-auto-track', 'false');
+
+		umamiScript.onload = function() {
+			umamiLoaded = true;
+			trackPageView();
+		};
+
+		umamiScript.onerror = function() {
+			console.error('Failed to load Umami analytics');
+		};
+
+		document.head.appendChild(umamiScript);
+	}
+
+	function trackPageView() {
+		if (typeof window.umami !== 'undefined' && window.umami.track) {
+			window.umami.track();
+
+		} else {
+			console.warn('Umami not available for tracking');
+		}
+	}
+
+	// 初始加载
+	loadUmami();
+
+	// Swup 集成
+	function setupUmamiWithSwup() {
+		if (!window.swup) return;
+
+		// 监听页面视图事件，在页面转换完成后触发
+		window.swup.hooks.on('page:view', () => {
+			// 延迟一小段时间确保页面完全加载和 URL 更新
+			setTimeout(() => {
+				trackPageView();
+			}, 100);
+		});
+	}
+
+	// 如果 Swup 已经可用，立即设置
+	if (window.swup) {
+		setupUmamiWithSwup();
+	} else {
+		// 否则等待 Swup 启用事件
+		document.addEventListener('swup:enable', setupUmamiWithSwup);
+	}
+})();
 </script>
