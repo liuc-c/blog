@@ -20,6 +20,12 @@ const postsCollection = defineCollection({
 		nextSlug: z.string().default(""),
 	}),
 });
+
+const specCollection = defineCollection({
+	type: 'content',
+});
+
 export const collections = {
-	posts: postsCollection, // 支持 .md 和 .mdx 文件
+	posts: postsCollection, 
+	spec: specCollection,   
 };
