@@ -41,22 +41,37 @@ const isProduction = import.meta.env.PROD;
 
 	function trackPageView() {
 		if (typeof window.umami !== 'undefined' && window.umami.track) {
+			// 获取当前页面的完整信息
 			const currentUrl = window.location.href;
 			const currentTitle = document.title;
-			
+
 			try {
 				window.umami.track(props => ({
 					...props,
 					url: currentUrl,
 					title: currentTitle
 				}));
+
 			} catch (error) {
 				console.warn('Function-based tracking failed, trying object-based method:', error);
+				try {
+					window.umami.track({
+						website: '41669f63-7334-4dba-8e99-2e8ee8e89eed',
+						url: currentUrl,
+						title: currentTitle,
+						hostname: window.location.hostname,
+						language: navigator.language,
+						referrer: document.referrer || '',
+						screen: `${screen.width}x${screen.height}`
+					});
+
+				} catch (error2) {
+					console.warn('Object-based tracking failed, trying default method:', error2);
 					try {
 						window.umami.track();
-						console.log('Used default tracking method');
-					} catch (error2) {
-						console.error('All tracking methods failed:', error2);
+					} catch (error3) {
+						console.error('All tracking methods failed:', error3);
+					}
 				}
 			}
 		} else {
