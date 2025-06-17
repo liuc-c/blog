@@ -1,7 +1,7 @@
 import { defineCollection, z } from "astro:content";
 
 const postsCollection = defineCollection({
-	type: 'content', // 支持 .md 和 .mdx 文件
+	type: "content", // 支持 .md 和 .mdx 文件
 	schema: z.object({
 		title: z.string(),
 		published: z.date(),
@@ -22,10 +22,18 @@ const postsCollection = defineCollection({
 });
 
 const specCollection = defineCollection({
-	type: 'content',
+	type: "content",
+	schema: z.object({
+		title: z.string().optional(),
+		description: z.string().optional(),
+		lang: z.string().optional().default("zh-cn"),
+	}),
 });
 
-export const collections = {
-	posts: postsCollection, 
-	spec: specCollection,   
+export const collections: Record<
+	string,
+	ReturnType<typeof defineCollection>
+> = {
+	posts: postsCollection,
+	spec: specCollection,
 };

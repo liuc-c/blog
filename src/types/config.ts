@@ -24,9 +24,7 @@ export type SiteConfig = {
 		enable: boolean;
 		depth: 1 | 2 | 3;
 	};
-
 };
-
 
 export enum LinkPreset {
 	Home = 0,
