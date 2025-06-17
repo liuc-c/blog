@@ -6,11 +6,9 @@ const isProduction = import.meta.env.PROD;
 
 {isProduction && (
 <script is:inline>
-// Umami Analytics with Swup integration
 (function() {
 	// 使用全局标识符防止重复初始化
 	if (window.__umamiInitialized) {
-		console.log('Umami already initialized, skipping...');
 		return;
 	}
 	window.__umamiInitialized = true;
@@ -22,7 +20,6 @@ const isProduction = import.meta.env.PROD;
 	function loadUmami() {
 		if (umamiLoaded || umamiScript) return;
 
-		console.log('Loading Umami analytics...');
 		umamiScript = document.createElement('script');
 		umamiScript.defer = true;
 		umamiScript.src = 'https://cloud.umami.is/script.js';
@@ -32,7 +29,6 @@ const isProduction = import.meta.env.PROD;
 
 		umamiScript.onload = function() {
 			umamiLoaded = true;
-			console.log('Umami loaded successfully');
 			trackPageView();
 		};
 
@@ -45,8 +41,6 @@ const isProduction = import.meta.env.PROD;
 
 	function trackPageView() {
 		if (typeof window.umami !== 'undefined' && window.umami.track) {
-			const currentUrl = window.location.pathname + window.location.search;
-			console.log('Tracking page view:', currentUrl);
 			window.umami.track();
 		} else {
 			console.warn('Umami not available for tracking');
@@ -57,7 +51,6 @@ const isProduction = import.meta.env.PROD;
 	function setupUmamiWithSwup() {
 		if (!window.swup || swupHookRegistered) return;
 
-		console.log('Setting up Umami with Swup');
 		swupHookRegistered = true;
 
 		// 监听页面视图事件，在页面转换完成后触发
