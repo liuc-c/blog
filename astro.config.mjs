@@ -4,7 +4,6 @@ import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
-import keystatic from "@keystatic/astro";
 import swup from "@swup/astro";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
@@ -26,8 +25,6 @@ import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 
-import markdoc from "@astrojs/markdoc";
-import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
@@ -108,9 +105,6 @@ export default defineConfig({
 		}),
 		svelte(),
 		sitemap(),
-		react(),
-		markdoc(),
-		keystatic(),
 	],
 
 	markdown: {
